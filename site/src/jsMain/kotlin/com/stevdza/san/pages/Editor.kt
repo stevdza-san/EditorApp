@@ -29,6 +29,7 @@ import org.w3c.dom.Element
 fun Editor() {
     var padding by remember { mutableStateOf(50) }
     var fontSize by remember { mutableStateOf(20) }
+    var lineHeight by remember { mutableStateOf(20) }
     var theme by remember { mutableStateOf(EditorTheme.RoyalBlue) }
     var code: Element? by remember { mutableStateOf(null) }
 
@@ -40,6 +41,7 @@ fun Editor() {
         ControlsView(
             defaultPadding = padding,
             defaultFontSize = fontSize,
+            defaultLineHeight = lineHeight,
             defaultTheme = theme.name,
             onPaddingInput = { inputValue ->
                 padding = if (inputValue in 10..99)
@@ -48,6 +50,10 @@ fun Editor() {
             onFontSizeInput = { inputValue ->
                 fontSize = if (inputValue in 10..29)
                     inputValue else 30
+            },
+            onLineHeightInput = {inputValue ->
+                lineHeight = if (inputValue in 16..39)
+                    inputValue else 40
             },
             onThemeSelect = { theme = it }
         )
@@ -61,7 +67,7 @@ fun Editor() {
             }
         ) {
             EditorHeader()
-            EditorBody(fontSize = fontSize)
+            EditorBody(fontSize = fontSize, lineHeight = lineHeight)
         }
     }
 }
@@ -70,9 +76,11 @@ fun Editor() {
 fun ControlsView(
     defaultPadding: Int,
     defaultFontSize: Int,
+    defaultLineHeight: Int,
     defaultTheme: String,
     onPaddingInput: (Int) -> Unit,
     onFontSizeInput: (Int) -> Unit,
+    onLineHeightInput: (Int) -> Unit,
     onThemeSelect: (EditorTheme) -> Unit
 ) {
     Row(
@@ -105,6 +113,34 @@ fun ControlsView(
             )
             Label(forId = "font-size") {
                 Text("Font-Size")
+            }
+        }
+        Div(
+            attrs = Modifier
+                .classNames("form-floating", "mb-3", "mt-3")
+                .margin(right = 10.px)
+                .toAttrs()
+        ) {
+            Input(
+                attrs = Modifier
+                    .classNames("form-control")
+                    .width(150.px)
+                    .id("line-height")
+                    .toAttrs {
+                        name("line-height")
+                        placeholder("Line-Height")
+                        min("16")
+                        max("40")
+                        value(defaultLineHeight)
+                        onInput {
+                            val inputValue = it.value?.toInt() ?: 20
+                            onLineHeightInput(inputValue)
+                        }
+                    },
+                type = InputType.Number
+            )
+            Label(forId = "line-height") {
+                Text("Line-Height")
             }
         }
         Div(
@@ -237,16 +273,16 @@ fun EditorHeader() {
 }
 
 @Composable
-fun EditorBody(fontSize: Int) {
-    KotlinCode(fontSize = fontSize)
+fun EditorBody(fontSize: Int, lineHeight: Int) {
+    KotlinCode(fontSize = fontSize, lineHeight = lineHeight)
 }
 
 @Composable
 fun KotlinCode(
+    modifier: Modifier = Modifier,
     fontSize: Int,
-    modifier: Modifier = Modifier
+    lineHeight: Int
 ) {
-    var pastingEnabled by remember { mutableStateOf(false) }
     Pre(attrs = Modifier
         .minWidth(112.px)
         .padding(all = 20.px)
@@ -266,24 +302,10 @@ fun KotlinCode(
             property("resize", "both")
         }
         .toAttrs {
-//            onKeyUp {
-//                if (it.ctrlKey && it.code == "KeyV" && !it.shiftKey) {
-//                    js("alert(\"Use CTRL+SHIFT+V instead.\");")
-//                    pastingEnabled = false
-//                } else if (it.ctrlKey && it.shiftKey && it.code == "KeyV") {
-//                    pastingEnabled = true
-//                }
-//            }
             onPaste {
                 it.preventDefault()
                 val text = it.clipboardData?.getData("Text")
-                document.execCommand("insertHtml", false, "<code id=\"code\" class=\"language-kotlin\" style=\"width: 100%; height: 100%; font-family: Roboto, sans-serif; font-size: ${fontSize.px}; overflow: hidden;\">" + text!! + "</code>")
-//                val data = it.clipboardData?.getData("Text")
-//                console.log(data)
-//                if (!pastingEnabled) {
-//                    it.preventDefault()
-//                    document.execCommand("insertHtml", false, "")
-//                }
+                document.execCommand("insertHtml", false, "<code id=\"code\" class=\"language-kotlin\" style=\"width: 100%; height: 100%; font-family: Roboto, sans-serif; font-size: ${fontSize.px}; line-height: ${lineHeight.px}; overflow: hidden;\">" + text!! + "</code>")
             }
         }
     ) {
@@ -294,6 +316,7 @@ fun KotlinCode(
             .styleModifier {
                 fontFamily("Roboto", "sans-serif")
                 fontSize(fontSize.px)
+                lineHeight(lineHeight.px)
                 overflow("hidden")
             }
             .toAttrs()
