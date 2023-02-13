@@ -3,7 +3,6 @@ package com.stevdza.san.pages
 import androidx.compose.runtime.*
 import com.stevdza.san.model.EditorTheme
 import com.varabyte.kobweb.compose.css.Overflow
-import com.varabyte.kobweb.compose.dom.ref
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -22,7 +21,6 @@ import kotlinx.browser.document
 import org.jetbrains.compose.web.attributes.*
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
-import org.w3c.dom.Element
 
 @Page(routeOverride = "/Editor")
 @Composable
@@ -31,7 +29,6 @@ fun Editor() {
     var fontSize by remember { mutableStateOf(20) }
     var lineHeight by remember { mutableStateOf(20) }
     var theme by remember { mutableStateOf(EditorTheme.RoyalBlue) }
-    var code: Element? by remember { mutableStateOf(null) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -51,20 +48,17 @@ fun Editor() {
                 fontSize = if (inputValue in 10..29)
                     inputValue else 30
             },
-            onLineHeightInput = {inputValue ->
+            onLineHeightInput = { inputValue ->
                 lineHeight = if (inputValue in 16..39)
                     inputValue else 40
             },
-            onThemeSelect = { theme = it }
+            onThemeSelect = { theme = it },
         )
         Column(
             modifier = Modifier
                 .id("editor")
                 .padding(all = padding.px)
-                .background(theme.color),
-            ref = ref {
-                code = document.getElementById("code")
-            }
+                .background(theme.color)
         ) {
             EditorHeader()
             EditorBody(fontSize = fontSize, lineHeight = lineHeight)
@@ -81,7 +75,7 @@ fun ControlsView(
     onPaddingInput: (Int) -> Unit,
     onFontSizeInput: (Int) -> Unit,
     onLineHeightInput: (Int) -> Unit,
-    onThemeSelect: (EditorTheme) -> Unit
+    onThemeSelect: (EditorTheme) -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -95,9 +89,9 @@ fun ControlsView(
         ) {
             Input(
                 attrs = Modifier
+                    .id("font-size")
                     .classNames("form-control")
                     .width(150.px)
-                    .id("font-size")
                     .toAttrs {
                         name("font-size")
                         placeholder("Font-Size")
@@ -123,9 +117,9 @@ fun ControlsView(
         ) {
             Input(
                 attrs = Modifier
+                    .id("line-height")
                     .classNames("form-control")
                     .width(150.px)
-                    .id("line-height")
                     .toAttrs {
                         name("line-height")
                         placeholder("Line-Height")
@@ -151,9 +145,9 @@ fun ControlsView(
         ) {
             Input(
                 attrs = Modifier
+                    .id("padding")
                     .classNames("form-control")
                     .width(150.px)
-                    .id("padding")
                     .toAttrs {
                         name("padding")
                         placeholder("Padding")
@@ -274,21 +268,11 @@ fun EditorHeader() {
 
 @Composable
 fun EditorBody(fontSize: Int, lineHeight: Int) {
-    KotlinCode(fontSize = fontSize, lineHeight = lineHeight)
-}
-
-@Composable
-fun KotlinCode(
-    modifier: Modifier = Modifier,
-    fontSize: Int,
-    lineHeight: Int
-) {
     Pre(attrs = Modifier
         .minWidth(112.px)
         .padding(all = 20.px)
         .margin(bottom = 0.px)
         .backgroundColor(Colors.White)
-        .contentEditable(true)
         .borderRadius(
             bottomLeft = 6.px,
             bottomRight = 6.px,
@@ -301,27 +285,33 @@ fun KotlinCode(
         .styleModifier {
             property("resize", "both")
         }
-        .toAttrs {
-            onPaste {
-                it.preventDefault()
-                val text = it.clipboardData?.getData("Text")
-                document.execCommand("insertHtml", false, "<code id=\"code\" class=\"language-kotlin\" style=\"width: 100%; height: 100%; font-family: Roboto, sans-serif; font-size: ${fontSize.px}; line-height: ${lineHeight.px}; overflow: hidden;\">" + text!! + "</code>")
-            }
-        }
+        .toAttrs()
     ) {
-        Code(attrs = modifier
-            .id("code")
-            .fillMaxSize()
+        Code(attrs = Modifier
+            .outline(style = LineStyle.None)
+            .contentEditable(true)
             .classNames("language-kotlin")
             .styleModifier {
                 fontFamily("Roboto", "sans-serif")
                 fontSize(fontSize.px)
                 lineHeight(lineHeight.px)
-                overflow("hidden")
             }
-            .toAttrs()
+            .toAttrs {
+                onPaste {
+                    it.preventDefault()
+                    val text = it.clipboardData?.getData("Text")
+                    if (text != null) {
+                        document.execCommand(
+                            "insertHtml",
+                            false,
+                            "<code class=\"language-kotlin\" style=\"width: 100%; height: 100%; font-family: Roboto, sans-serif; font-size: ${fontSize.px}; line-height: ${lineHeight.px}; overflow: hidden;\">" + text + "</code>"
+                        )
+                    }
+                }
+            }
         ) {
-            Text("""
+            Text(
+                """
                 @Page
                 @Composable
                 fun HomePage() {
@@ -334,7 +324,8 @@ fun KotlinCode(
                         Link(path = "/Editor", text = "Editor")
                     }
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
         }
     }
 }
