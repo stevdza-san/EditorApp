@@ -1,9 +1,9 @@
 package com.stevdza.san.pages
 
 import androidx.compose.runtime.*
+import com.stevdza.san.sections.Footer
 import com.stevdza.san.model.EditorTheme
 import com.varabyte.kobweb.compose.css.Overflow
-import com.varabyte.kobweb.compose.dom.ref
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -16,16 +16,15 @@ import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.Surface
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.theme.shapes.Circle
 import com.varabyte.kobweb.silk.theme.shapes.clip
 import kotlinx.browser.document
 import org.jetbrains.compose.web.attributes.*
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
-import org.w3c.dom.Element
 
 @Page
 @Composable
@@ -34,45 +33,53 @@ fun Editor() {
     var fontSize by remember { mutableStateOf(20) }
     var lineHeight by remember { mutableStateOf(20) }
     var theme by remember { mutableStateOf(EditorTheme.RoyalBlue) }
-    var controls: Element? by remember { mutableStateOf(null) }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        ref = ref {
-            controls = document.getElementById("controls")
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .minHeight(100.percent)
+            .gridTemplateRows("1fr auto")
     ) {
-        Image(src = "logo.svg", modifier = Modifier.size(150.px))
-        ControlsView(
-            defaultPadding = padding,
-            defaultFontSize = fontSize,
-            defaultLineHeight = lineHeight,
-            defaultTheme = theme.name,
-            onPaddingInput = { inputValue ->
-                padding = if (inputValue in 10..99)
-                    inputValue else 100
-            },
-            onFontSizeInput = { inputValue ->
-                fontSize = if (inputValue in 10..29)
-                    inputValue else 30
-            },
-            onLineHeightInput = { inputValue ->
-                lineHeight = if (inputValue in 16..39)
-                    inputValue else 40
-            },
-            onThemeSelect = { theme = it },
-        )
         Column(
-            modifier = Modifier
-                .id("editor")
-                .padding(all = padding.px)
-                .background(theme.color)
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            EditorHeader()
-            EditorBody(fontSize = fontSize, lineHeight = lineHeight)
+            Image(src = "logo.svg", modifier = Modifier.size(200.px))
+            ControlsView(
+                defaultPadding = padding,
+                defaultFontSize = fontSize,
+                defaultLineHeight = lineHeight,
+                defaultTheme = theme.name,
+                onPaddingInput = { inputValue ->
+                    padding = if (inputValue in 10..99)
+                        inputValue else 100
+                },
+                onFontSizeInput = { inputValue ->
+                    fontSize = if (inputValue in 10..29)
+                        inputValue else 30
+                },
+                onLineHeightInput = { inputValue ->
+                    lineHeight = if (inputValue in 16..39)
+                        inputValue else 40
+                },
+                onThemeSelect = { theme = it },
+            )
+            Column(
+                modifier = Modifier
+                    .id("editor")
+                    .padding(all = padding.px)
+                    .background(theme.color)
+            ) {
+                EditorHeader()
+                EditorBody(fontSize = fontSize, lineHeight = lineHeight)
+            }
         }
+        Footer(
+            modifier = Modifier
+                .gridRowStart(2)
+                .gridRowEnd(6)
+        )
     }
 }
 
@@ -87,42 +94,16 @@ fun ControlsView(
     onLineHeightInput: (Int) -> Unit,
     onThemeSelect: (EditorTheme) -> Unit,
 ) {
-    val breakpoint by rememberBreakpoint()
-    if (breakpoint < Breakpoint.LG) {
-        Column(
-            modifier = Modifier.id("controls"),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Controls(
-                defaultPadding = defaultPadding,
-                defaultFontSize = defaultFontSize,
-                defaultLineHeight = defaultLineHeight,
-                defaultTheme = defaultTheme,
-                onPaddingInput = onPaddingInput,
-                onFontSizeInput = onFontSizeInput,
-                onLineHeightInput = onLineHeightInput,
-                onThemeSelect = onThemeSelect
-            )
-        }
-    } else {
-        Row(
-            modifier = Modifier.id("controls"),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Controls(
-                defaultPadding = defaultPadding,
-                defaultFontSize = defaultFontSize,
-                defaultLineHeight = defaultLineHeight,
-                defaultTheme = defaultTheme,
-                onPaddingInput = onPaddingInput,
-                onFontSizeInput = onFontSizeInput,
-                onLineHeightInput = onLineHeightInput,
-                onThemeSelect = onThemeSelect
-            )
-        }
-    }
+    Controls(
+        defaultPadding = defaultPadding,
+        defaultFontSize = defaultFontSize,
+        defaultLineHeight = defaultLineHeight,
+        defaultTheme = defaultTheme,
+        onPaddingInput = onPaddingInput,
+        onFontSizeInput = onFontSizeInput,
+        onLineHeightInput = onLineHeightInput,
+        onThemeSelect = onThemeSelect
+    )
 }
 
 @Composable
@@ -136,106 +117,111 @@ fun Controls(
     onLineHeightInput: (Int) -> Unit,
     onThemeSelect: (EditorTheme) -> Unit,
 ) {
-    Div(
-        attrs = Modifier
-            .classNames("form-floating", "my-1", "mx-1")
-            .toAttrs()
+    SimpleGrid(
+        modifier = Modifier.margin(bottom = 20.px),
+        numColumns = numColumns(base = 2, md = 3)
     ) {
-        Input(
+        Div(
             attrs = Modifier
-                .id("font-size")
-                .classNames("form-control")
-                .width(150.px)
-                .toAttrs {
-                    name("font-size")
-                    placeholder("Font-Size")
-                    min("10")
-                    max("30")
-                    value(defaultFontSize)
-                    onInput {
-                        val inputValue = it.value?.toInt() ?: 10
-                        onFontSizeInput(inputValue)
-                    }
-                },
-            type = InputType.Number
-        )
-        Label(forId = "font-size") {
-            Text("Font-Size")
+                .classNames("form-floating", "my-1", "mx-1")
+                .toAttrs()
+        ) {
+            Input(
+                attrs = Modifier
+                    .id("font-size")
+                    .classNames("form-control")
+                    .width(150.px)
+                    .toAttrs {
+                        name("font-size")
+                        placeholder("Font-Size")
+                        min("10")
+                        max("30")
+                        value(defaultFontSize)
+                        onInput {
+                            val inputValue = it.value?.toInt() ?: 10
+                            onFontSizeInput(inputValue)
+                        }
+                    },
+                type = InputType.Number
+            )
+            Label(forId = "font-size") {
+                Text("Font-Size")
+            }
         }
-    }
-    Div(
-        attrs = Modifier
-            .classNames("form-floating", "my-1", "mx-1")
-            .toAttrs()
-    ) {
-        Input(
+        Div(
             attrs = Modifier
-                .id("line-height")
-                .classNames("form-control")
-                .width(150.px)
-                .toAttrs {
-                    name("line-height")
-                    placeholder("Line-Height")
-                    min("16")
-                    max("40")
-                    value(defaultLineHeight)
-                    onInput {
-                        val inputValue = it.value?.toInt() ?: 20
-                        onLineHeightInput(inputValue)
-                    }
-                },
-            type = InputType.Number
-        )
-        Label(forId = "line-height") {
-            Text("Line-Height")
+                .classNames("form-floating", "my-1", "mx-1")
+                .toAttrs()
+        ) {
+            Input(
+                attrs = Modifier
+                    .id("line-height")
+                    .classNames("form-control")
+                    .width(150.px)
+                    .toAttrs {
+                        name("line-height")
+                        placeholder("Line-Height")
+                        min("16")
+                        max("40")
+                        value(defaultLineHeight)
+                        onInput {
+                            val inputValue = it.value?.toInt() ?: 20
+                            onLineHeightInput(inputValue)
+                        }
+                    },
+                type = InputType.Number
+            )
+            Label(forId = "line-height") {
+                Text("Line-Height")
+            }
         }
-    }
-    Div(
-        attrs = Modifier
-            .classNames("form-floating", "my-1", "mx-1")
-            .toAttrs()
-    ) {
-        Input(
+        Div(
             attrs = Modifier
-                .id("padding")
-                .classNames("form-control")
-                .width(150.px)
-                .toAttrs {
-                    name("padding")
-                    placeholder("Padding")
-                    min("10")
-                    max("100")
-                    value(defaultPadding)
-                    onInput {
-                        val inputValue = it.value?.toInt() ?: 10
-                        onPaddingInput(inputValue)
-                    }
-                },
-            type = InputType.Number
+                .classNames("form-floating", "my-1", "mx-1")
+                .toAttrs()
+        ) {
+            Input(
+                attrs = Modifier
+                    .id("padding")
+                    .classNames("form-control")
+                    .width(150.px)
+                    .toAttrs {
+                        name("padding")
+                        placeholder("Padding")
+                        min("10")
+                        max("100")
+                        value(defaultPadding)
+                        onInput {
+                            val inputValue = it.value?.toInt() ?: 10
+                            onPaddingInput(inputValue)
+                        }
+                    },
+                type = InputType.Number
+            )
+            Label(forId = "padding") {
+                Text("Padding")
+            }
+        }
+        DropDown(
+            selectedTheme = defaultTheme,
+            onThemeSelect = onThemeSelect
         )
-        Label(forId = "padding") {
-            Text("Padding")
+        Button(attrs = Modifier
+            .classNames("btn", "btn-primary", "btn-md", "my-1", "mx-1")
+            .onClick {
+                js("hljs.highlightAll()") as Unit
+            }
+            .toAttrs()
+        ) {
+            Text("Apply Colors")
         }
-    }
-    DropDown(
-        selectedTheme = defaultTheme,
-        onThemeSelect = onThemeSelect
-    )
-    Button(attrs = Modifier
-        .classNames("btn", "btn-primary", "btn-md", "my-1", "mx-1")
-        .onClick {
-            js("hljs.highlightAll()") as Unit
+        Button(attrs = Modifier
+            .classNames("btn", "btn-primary", "btn-md", "my-1", "mx-1")
+            .onClick { saveImage() }
+            .toAttrs()
+        ) {
+            Text("Export")
         }
-        .toAttrs()
-    ) {
-        Text("Apply Colors")
-    }
-    Button(attrs = Modifier
-        .classNames("btn", "btn-primary", "btn-md", "my-1", "mx-1")
-        .onClick { saveImage() }
-        .toAttrs()
-    ) {
-        Text("Export")
     }
 }
 
@@ -247,6 +233,8 @@ fun DropDown(
     Div(
         attrs = Modifier
             .classNames("dropdown", "my-1", "mx-1")
+            .fillMaxWidth()
+            .alignSelf(AlignSelf.Center)
             .toAttrs()
     ) {
         Button(
@@ -366,7 +354,7 @@ fun EditorBody(fontSize: Int, lineHeight: Int) {
         ) {
             Text(
                 """
-                private val name = "Stevdza-San"
+                private val credits = "Kobweb Framework"
             """.trimIndent()
             )
         }
