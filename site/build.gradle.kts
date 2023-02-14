@@ -37,7 +37,7 @@ kobweb {
                 }
                 link {
                     rel = "stylesheet"
-                    href = "vs.css"
+                    href = "lightfair.css"
                 }
             }
         }
