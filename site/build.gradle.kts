@@ -16,7 +16,10 @@ version = "1.0-SNAPSHOT"
 kobweb {
     app {
         index {
-            description.set("Powered by Kobweb")
+            description.set(
+                "Web app that allows you to paste, apply colors and export your code as a beautiful image." +
+                        " Which you can use later to share with anyone on social media."
+            )
 
             head.add {
                 script {
