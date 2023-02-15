@@ -94,29 +94,6 @@ fun ControlsView(
     onLineHeightInput: (Int) -> Unit,
     onThemeSelect: (EditorTheme) -> Unit,
 ) {
-    Controls(
-        defaultPadding = defaultPadding,
-        defaultFontSize = defaultFontSize,
-        defaultLineHeight = defaultLineHeight,
-        defaultTheme = defaultTheme,
-        onPaddingInput = onPaddingInput,
-        onFontSizeInput = onFontSizeInput,
-        onLineHeightInput = onLineHeightInput,
-        onThemeSelect = onThemeSelect
-    )
-}
-
-@Composable
-fun Controls(
-    defaultPadding: Int,
-    defaultFontSize: Int,
-    defaultLineHeight: Int,
-    defaultTheme: String,
-    onPaddingInput: (Int) -> Unit,
-    onFontSizeInput: (Int) -> Unit,
-    onLineHeightInput: (Int) -> Unit,
-    onThemeSelect: (EditorTheme) -> Unit,
-) {
     SimpleGrid(
         modifier = Modifier.margin(bottom = 20.px),
         numColumns = numColumns(base = 2, md = 3)
