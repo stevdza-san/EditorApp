@@ -23,7 +23,8 @@ kobweb {
 
             head.add {
                 script {
-                    src = "gtag.js"
+                    async = true
+                    src = "https://www.googletagmanager.com/gtag/js?id=G-M6NQ3C6B4S"
                 }
                 script {
                     src = "dom-to-image.js"
