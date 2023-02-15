@@ -23,6 +23,9 @@ kobweb {
 
             head.add {
                 script {
+                    src = "gtag.js"
+                }
+                script {
                     src = "dom-to-image.js"
                 }
                 script {
