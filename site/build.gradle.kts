@@ -27,6 +27,9 @@ kobweb {
                     src = "https://www.googletagmanager.com/gtag/js?id=G-M6NQ3C6B4S"
                 }
                 script {
+                    src = "gtag.js"
+                }
+                script {
                     src = "dom-to-image.js"
                 }
                 script {
