@@ -19,6 +19,8 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.Surface
 import com.varabyte.kobweb.silk.components.layout.numColumns
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import com.varabyte.kobweb.silk.theme.shapes.Circle
 import com.varabyte.kobweb.silk.theme.shapes.clip
 import kotlinx.browser.document
@@ -33,6 +35,7 @@ fun Editor() {
     var fontSize by remember { mutableStateOf(20) }
     var lineHeight by remember { mutableStateOf(20) }
     var theme by remember { mutableStateOf(EditorTheme.RoyalBlue) }
+    val breakpoint by rememberBreakpoint()
 
     Box(
         modifier = Modifier
@@ -72,7 +75,12 @@ fun Editor() {
                     .background(theme.color)
             ) {
                 EditorHeader()
-                EditorBody(fontSize = fontSize, lineHeight = lineHeight)
+                EditorBody(
+                    fontSize = fontSize,
+                    lineHeight = lineHeight,
+                    padding = padding,
+                    breakpoint = breakpoint
+                )
             }
         }
         Footer(
@@ -283,9 +291,14 @@ fun EditorHeader() {
 }
 
 @Composable
-fun EditorBody(fontSize: Int, lineHeight: Int) {
+fun EditorBody(
+    fontSize: Int,
+    lineHeight: Int,
+    padding: Int,
+    breakpoint: Breakpoint
+) {
     Pre(attrs = Modifier
-        .width(740.px)
+        .width(if (breakpoint <= Breakpoint.MD) 100.vw - padding.px * 2 else 740.px)
         .height(350.px)
         .minWidth(112.px)
         .padding(all = 20.px)
