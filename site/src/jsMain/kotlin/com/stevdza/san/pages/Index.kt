@@ -3,6 +3,7 @@ package com.stevdza.san.pages
 import androidx.compose.runtime.*
 import com.stevdza.san.sections.Footer
 import com.stevdza.san.model.EditorTheme
+import com.stevdza.san.model.Theme
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -34,7 +35,7 @@ fun Editor() {
     var padding by remember { mutableStateOf(50) }
     var fontSize by remember { mutableStateOf(20) }
     var lineHeight by remember { mutableStateOf(20) }
-    var theme by remember { mutableStateOf(EditorTheme.RoyalBlue) }
+    var editorTheme by remember { mutableStateOf(EditorTheme.RoyalBlue) }
     val breakpoint by rememberBreakpoint()
 
     Box(
@@ -53,26 +54,30 @@ fun Editor() {
                 defaultPadding = padding,
                 defaultFontSize = fontSize,
                 defaultLineHeight = lineHeight,
-                defaultTheme = theme.name,
-                onPaddingInput = { inputValue ->
-                    padding = if (inputValue in 10..99)
-                        inputValue else 100
+                defaultTheme = editorTheme.name,
+                onPaddingChanged = { value ->
+                    padding = if (value in 10..99)
+                        value else 100
                 },
-                onFontSizeInput = { inputValue ->
-                    fontSize = if (inputValue in 10..29)
-                        inputValue else 30
+                onFontSizeChanged = { value ->
+                    fontSize = if (value in 10..29)
+                        value else 30
                 },
-                onLineHeightInput = { inputValue ->
-                    lineHeight = if (inputValue in 16..39)
-                        inputValue else 40
+                onLineHeightChanged = { value ->
+                    lineHeight = if (value in 16..39)
+                        value else 40
                 },
-                onThemeSelect = { theme = it },
+                onThemeSelect = { selectedTheme ->
+                    editorTheme = EditorTheme.values().find { themes ->
+                        themes.color == selectedTheme
+                    }!!
+                },
             )
             Column(
                 modifier = Modifier
                     .id("editor")
                     .padding(all = padding.px)
-                    .background(theme.color)
+                    .backgroundColor(editorTheme.color)
             ) {
                 EditorHeader()
                 EditorBody(
@@ -97,10 +102,10 @@ fun ControlsView(
     defaultFontSize: Int,
     defaultLineHeight: Int,
     defaultTheme: String,
-    onPaddingInput: (Int) -> Unit,
-    onFontSizeInput: (Int) -> Unit,
-    onLineHeightInput: (Int) -> Unit,
-    onThemeSelect: (EditorTheme) -> Unit,
+    onPaddingChanged: (Int) -> Unit,
+    onFontSizeChanged: (Int) -> Unit,
+    onLineHeightChanged: (Int) -> Unit,
+    onThemeSelect: (CSSColorValue) -> Unit,
 ) {
     SimpleGrid(
         modifier = Modifier.margin(bottom = 20.px),
@@ -124,7 +129,7 @@ fun ControlsView(
                         value(defaultFontSize)
                         onInput {
                             val inputValue = it.value?.toInt() ?: 10
-                            onFontSizeInput(inputValue)
+                            onFontSizeChanged(inputValue)
                         }
                     },
                 type = InputType.Number
@@ -151,7 +156,7 @@ fun ControlsView(
                         value(defaultLineHeight)
                         onInput {
                             val inputValue = it.value?.toInt() ?: 20
-                            onLineHeightInput(inputValue)
+                            onLineHeightChanged(inputValue)
                         }
                     },
                 type = InputType.Number
@@ -178,7 +183,7 @@ fun ControlsView(
                         value(defaultPadding)
                         onInput {
                             val inputValue = it.value?.toInt() ?: 10
-                            onPaddingInput(inputValue)
+                            onPaddingChanged(inputValue)
                         }
                     },
                 type = InputType.Number
@@ -213,7 +218,7 @@ fun ControlsView(
 @Composable
 fun DropDown(
     selectedTheme: String,
-    onThemeSelect: (EditorTheme) -> Unit
+    onThemeSelect: (CSSColorValue) -> Unit
 ) {
     Div(
         attrs = Modifier
@@ -240,7 +245,7 @@ fun DropDown(
                 ) {
                     P(
                         attrs = Modifier
-                            .onClick { onThemeSelect(theme) }
+                            .onClick { onThemeSelect(theme.color) }
                             .toAttrs(),
                     ) {
                         Text(theme.name)
@@ -268,21 +273,21 @@ fun EditorHeader() {
         Row {
             Box(
                 modifier = Modifier
-                    .backgroundColor("#FF5F56")
+                    .backgroundColor(Theme.Red.color)
                     .size(14.px)
                     .clip(Circle())
                     .margin(right = 10.px),
             )
             Box(
                 modifier = Modifier
-                    .backgroundColor("#FFBD2E")
+                    .backgroundColor(Theme.Yellow.color)
                     .size(14.px)
                     .clip(Circle())
                     .margin(right = 10.px)
             )
             Box(
                 modifier = Modifier
-                    .backgroundColor("#27C93F")
+                    .backgroundColor(Theme.Green.color)
                     .size(14.px)
                     .clip(Circle())
             )

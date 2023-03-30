@@ -1,8 +1,15 @@
 package com.stevdza.san.model
 
-enum class EditorTheme(val color: String) {
-    RoyalBlue(color = "linear-gradient(-45deg, #1CB5E0 0%, #16169C 100%)"),
-    SeaGreen(color = "linear-gradient(-45deg, rgba(120,255,214, 100) 0%, rgba(0, 121, 145, 100) 100%)")
-//    VolcanoMagenta(color = "linear-gradient(-45deg, #CD5888 0%, #913175 100%)"),
-//    VioletBeauty(color = "linear-gradient(-45deg, #C5008E 0%, #6F1AB6 100%)")
+import org.jetbrains.compose.web.css.CSSColorValue
+import org.jetbrains.compose.web.css.rgb
+
+enum class EditorTheme(val color: CSSColorValue) {
+    RoyalBlue(color = rgb(r = 28, g = 181, b = 224)),
+    SeaGreen(color = rgb(r = 28, g = 224, b = 153))
+}
+
+enum class Theme(val color: CSSColorValue) {
+    Red(color = rgb(r = 255, g = 95, b = 86)),
+    Yellow(color = rgb(r = 255, g = 189, b = 46)),
+    Green(color = rgb(r = 39, g = 201, b = 63))
 }

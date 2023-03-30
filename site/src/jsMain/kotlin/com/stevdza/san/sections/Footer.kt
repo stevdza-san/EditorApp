@@ -1,6 +1,7 @@
 package com.stevdza.san.sections
 
 import androidx.compose.runtime.Composable
+import com.stevdza.san.model.EditorTheme
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -19,12 +20,11 @@ val FooterStyle by ComponentStyle.base {
         .margin(top = 20.px)
         .padding(topBottom = 1.cssRem)
         .fontSize(14.px)
-//        .backgroundColor("#EFEFEF")
 }
 
 val LinkStyle by ComponentStyle {
     anyLink {
-        Modifier.color("#554CF4")
+        Modifier.color(EditorTheme.RoyalBlue.color)
     }
 }
 
@@ -40,7 +40,7 @@ fun Footer(modifier: Modifier = Modifier) {
             modifier = LinkStyle.toModifier().margin(left = 6.px),
             path = "https://www.youtube.com/stevdza_san",
             text = "Stevdza-San",
-            openExternalLinksStrategy = OpenLinkStrategy.IN_NEW_TAB_FOREGROUND
+            openExternalLinksStrategy = OpenLinkStrategy.IN_NEW_TAB
         )
     }
 }
