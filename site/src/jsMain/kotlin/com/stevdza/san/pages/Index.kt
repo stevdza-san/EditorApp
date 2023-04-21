@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import com.stevdza.san.sections.Footer
 import com.stevdza.san.model.EditorTheme
 import com.stevdza.san.model.Theme
+import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -236,7 +237,10 @@ fun DropDown(
         ) {
             Text(selectedTheme)
         }
-        Ul(attrs = Modifier.classNames("dropdown-menu").toAttrs()) {
+        Ul(attrs = Modifier
+            .classNames("dropdown-menu")
+            .cursor(Cursor.Pointer)
+            .toAttrs()) {
             EditorTheme.values().forEach { theme ->
                 Li(
                     attrs = Modifier
@@ -285,6 +289,7 @@ fun EditorHeader() {
                     .clip(Circle())
                     .margin(right = 10.px)
             )
+            console.log()
             Box(
                 modifier = Modifier
                     .backgroundColor(Theme.Green.color)
@@ -317,7 +322,7 @@ fun EditorBody(
         )
         .border(width = 0.px)
         .outline(style = LineStyle.None)
-        .overflow(overflows = arrayOf(Overflow.Hidden))
+        .overflow(overflow = Overflow.Hidden)
         .styleModifier {
             property("resize", "both")
         }

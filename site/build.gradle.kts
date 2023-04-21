@@ -17,8 +17,8 @@ kobweb {
     app {
         index {
             description.set(
-                "Web app that allows you to paste, apply colors and export your code as a beautiful image." +
-                        " Which you can use later to share with anyone on social media."
+                "Web app that allows you to paste, apply colors and export your code as a beautiful image," +
+                        " that you can later share with everyone on social media!"
             )
 
             head.add {
