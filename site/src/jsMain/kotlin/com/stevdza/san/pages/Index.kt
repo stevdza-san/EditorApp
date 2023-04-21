@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import com.stevdza.san.sections.Footer
 import com.stevdza.san.model.EditorTheme
 import com.stevdza.san.model.Theme
+import com.stevdza.san.util.Res
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -43,14 +44,13 @@ fun Editor() {
         modifier = Modifier
             .fillMaxWidth()
             .minHeight(100.percent)
-            .gridTemplateRows("1fr auto")
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(src = "logo.svg", modifier = Modifier.size(200.px))
+            Image(src = Res.Image.logo, modifier = Modifier.size(200.px))
             ControlsView(
                 defaultPadding = padding,
                 defaultFontSize = fontSize,
@@ -61,7 +61,7 @@ fun Editor() {
                         value else 100
                 },
                 onFontSizeChanged = { value ->
-                    fontSize = if (value in 10..29)
+                    fontSize = if (value in 14..29)
                         value else 30
                 },
                 onLineHeightChanged = { value ->
@@ -76,7 +76,7 @@ fun Editor() {
             )
             Column(
                 modifier = Modifier
-                    .id("editor")
+                    .id(Res.Id.editor)
                     .padding(all = padding.px)
                     .backgroundColor(editorTheme.color)
             ) {
@@ -119,23 +119,23 @@ fun ControlsView(
         ) {
             Input(
                 attrs = Modifier
-                    .id("font-size")
+                    .id(Res.Id.fontSize)
                     .classNames("form-control")
                     .width(150.px)
                     .toAttrs {
                         name("font-size")
                         placeholder("Font-Size")
-                        min("10")
+                        min("14")
                         max("30")
                         value(defaultFontSize)
                         onInput {
-                            val inputValue = it.value?.toInt() ?: 10
+                            val inputValue = it.value?.toInt() ?: 14
                             onFontSizeChanged(inputValue)
                         }
                     },
                 type = InputType.Number
             )
-            Label(forId = "font-size") {
+            Label(forId = Res.Id.fontSize) {
                 Text("Font-Size")
             }
         }
@@ -146,7 +146,7 @@ fun ControlsView(
         ) {
             Input(
                 attrs = Modifier
-                    .id("line-height")
+                    .id(Res.Id.lineHeight)
                     .classNames("form-control")
                     .width(150.px)
                     .toAttrs {
@@ -162,7 +162,7 @@ fun ControlsView(
                     },
                 type = InputType.Number
             )
-            Label(forId = "line-height") {
+            Label(forId = Res.Id.lineHeight) {
                 Text("Line-Height")
             }
         }
@@ -173,7 +173,7 @@ fun ControlsView(
         ) {
             Input(
                 attrs = Modifier
-                    .id("padding")
+                    .id(Res.Id.padding)
                     .classNames("form-control")
                     .width(150.px)
                     .toAttrs {
@@ -189,7 +189,7 @@ fun ControlsView(
                     },
                 type = InputType.Number
             )
-            Label(forId = "padding") {
+            Label(forId = Res.Id.padding) {
                 Text("Padding")
             }
         }
