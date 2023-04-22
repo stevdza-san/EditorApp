@@ -2,7 +2,7 @@ package com.stevdza.san.pages
 
 import androidx.compose.runtime.Composable
 import com.stevdza.san.components.Editor
-import com.stevdza.san.sections.Footer
+import com.stevdza.san.components.Footer
 import com.stevdza.san.util.Res
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box

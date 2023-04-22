@@ -1,4 +1,4 @@
-package com.stevdza.san.sections
+package com.stevdza.san.components
 
 import androidx.compose.runtime.Composable
 import com.stevdza.san.model.EditorTheme

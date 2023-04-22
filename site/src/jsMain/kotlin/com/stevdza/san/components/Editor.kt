@@ -86,27 +86,15 @@ private fun EditorHeader() {
             )
     ) {
         Row {
-            Box(
-                modifier = Modifier
-                    .backgroundColor(Theme.Red.color)
-                    .size(14.px)
-                    .clip(Circle())
-                    .margin(right = 10.px),
-            )
-            Box(
-                modifier = Modifier
-                    .backgroundColor(Theme.Yellow.color)
-                    .size(14.px)
-                    .clip(Circle())
-                    .margin(right = 10.px)
-            )
-            console.log()
-            Box(
-                modifier = Modifier
-                    .backgroundColor(Theme.Green.color)
-                    .size(14.px)
-                    .clip(Circle())
-            )
+            repeat(3) { index ->
+                Box(
+                    modifier = Modifier
+                        .backgroundColor(Theme.values()[index].color)
+                        .size(14.px)
+                        .clip(Circle())
+                        .margin(right = if (index != 2) 10.px else 0.px),
+                )
+            }
         }
     }
 }
