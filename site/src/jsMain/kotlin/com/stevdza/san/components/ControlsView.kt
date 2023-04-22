@@ -9,9 +9,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
+import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.attributes.*
 import org.jetbrains.compose.web.css.AlignSelf
-import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
 
@@ -155,23 +155,20 @@ private fun DropDown(
         ) {
             Text(selectedTheme)
         }
-        Ul(attrs = Modifier
-            .classNames("dropdown-menu")
-            .cursor(Cursor.Pointer)
-            .toAttrs()) {
+        Ul(
+            attrs = Modifier
+                .classNames("dropdown-menu")
+                .cursor(Cursor.Pointer)
+                .toAttrs()
+        ) {
             EditorTheme.values().forEach { theme ->
                 Li(
                     attrs = Modifier
                         .classNames("dropdown-item")
+                        .onClick { onThemeChanged(theme) }
                         .toAttrs()
                 ) {
-                    P(
-                        attrs = Modifier
-                            .onClick { onThemeChanged(theme) }
-                            .toAttrs(),
-                    ) {
-                        Text(theme.name)
-                    }
+                    SpanText(text = theme.name)
                 }
             }
         }

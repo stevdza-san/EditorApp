@@ -5,7 +5,9 @@ import org.jetbrains.compose.web.css.rgb
 
 enum class EditorTheme(val color: CSSColorValue) {
     RoyalBlue(color = rgb(r = 28, g = 181, b = 224)),
-    SeaGreen(color = rgb(r = 28, g = 224, b = 153))
+    SeaGreen(color = rgb(r = 28, g = 224, b = 153)),
+    WickedRed(color = rgb(r = 224, g = 28, b = 28)),
+    ModernPurple(color = rgb(r = 138, g = 28, b = 224))
 }
 
 enum class Theme(val color: CSSColorValue) {
