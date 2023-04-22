@@ -24,7 +24,7 @@ fun ControlsView(
     onPaddingChanged: (Int) -> Unit,
     onFontSizeChanged: (Int) -> Unit,
     onLineHeightChanged: (Int) -> Unit,
-    onThemeSelect: (CSSColorValue) -> Unit,
+    onThemeChanged: (EditorTheme) -> Unit,
 ) {
     SimpleGrid(
         modifier = Modifier.margin(bottom = 20.px),
@@ -113,7 +113,7 @@ fun ControlsView(
         }
         DropDown(
             selectedTheme = defaultTheme,
-            onThemeSelect = onThemeSelect
+            onThemeChanged = onThemeChanged
         )
         Button(attrs = Modifier
             .classNames("btn", "btn-primary", "btn-md", "my-1", "mx-1")
@@ -137,7 +137,7 @@ fun ControlsView(
 @Composable
 private fun DropDown(
     selectedTheme: String,
-    onThemeSelect: (CSSColorValue) -> Unit
+    onThemeChanged: (EditorTheme) -> Unit
 ) {
     Div(
         attrs = Modifier
@@ -167,7 +167,7 @@ private fun DropDown(
                 ) {
                     P(
                         attrs = Modifier
-                            .onClick { onThemeSelect(theme.color) }
+                            .onClick { onThemeChanged(theme) }
                             .toAttrs(),
                     ) {
                         Text(theme.name)

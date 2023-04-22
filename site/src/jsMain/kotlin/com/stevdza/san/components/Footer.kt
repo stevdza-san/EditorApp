@@ -17,8 +17,7 @@ import org.jetbrains.compose.web.dom.Text
 val FooterStyle by ComponentStyle.base {
     Modifier
         .fillMaxWidth()
-        .margin(top = 20.px)
-        .padding(topBottom = 1.cssRem)
+        .margin(topBottom = 20.px)
         .fontSize(14.px)
 }
 

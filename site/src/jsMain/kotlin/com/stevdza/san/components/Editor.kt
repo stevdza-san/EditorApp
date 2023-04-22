@@ -49,11 +49,7 @@ fun Editor() {
             lineHeight = if (value in 16..39)
                 value else 40
         },
-        onThemeSelect = { selectedTheme ->
-            editorTheme = EditorTheme.values().find { themes ->
-                themes.color == selectedTheme
-            }!!
-        },
+        onThemeChanged = { editorTheme = it },
     )
     Column(
         modifier = Modifier
